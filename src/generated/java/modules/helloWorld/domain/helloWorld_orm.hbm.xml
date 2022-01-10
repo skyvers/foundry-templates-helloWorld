@@ -21,6 +21,7 @@
 		<property name="bizDataGroupId" length="36" />
 		<property name="bizUserId" length="36" not-null="true" />
 		<property name="textToEcho" length="255" />
+		<property name="echoedText" length="255" />
 		<filter name="helloWorldNewDocumentNoneFilter" condition="1=0"/>
 		<filter name="helloWorldNewDocumentCustomerFilter" condition="bizCustomer=:customerParam"/>
 		<filter name="helloWorldNewDocumentDataGroupIdFilter" condition="bizDataGroupId=:dataGroupIdParam"/>

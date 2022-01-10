@@ -9,5 +9,9 @@
             <displayName>Text to Echo</displayName>
             <length>255</length>
         </text>
+        <text name="echoedText">
+        	<displayName>Echoed Text</displayName>
+        	<length>255</length>
+        </text>
     </attributes>
 </document>

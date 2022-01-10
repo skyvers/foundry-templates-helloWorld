@@ -31,10 +31,18 @@ public class NewDocument extends AbstractPersistentBean {
 	/** @hidden */
 	public static final String textToEchoPropertyName = "textToEcho";
 
+	/** @hidden */
+	public static final String echoedTextPropertyName = "echoedText";
+
 	/**
 	 * Text to Echo
 	 **/
 	private String textToEcho;
+
+	/**
+	 * Echoed Text
+	 **/
+	private String echoedText;
 
 	@Override
 	@XmlTransient
@@ -93,5 +101,23 @@ public class NewDocument extends AbstractPersistentBean {
 	public void setTextToEcho(String textToEcho) {
 		preset(textToEchoPropertyName, textToEcho);
 		this.textToEcho = textToEcho;
+	}
+
+	/**
+	 * {@link #echoedText} accessor.
+	 * @return	The value.
+	 **/
+	public String getEchoedText() {
+		return echoedText;
+	}
+
+	/**
+	 * {@link #echoedText} mutator.
+	 * @param echoedText	The new value.
+	 **/
+	@XmlElement
+	public void setEchoedText(String echoedText) {
+		preset(echoedTextPropertyName, echoedText);
+		this.echoedText = echoedText;
 	}
 }
