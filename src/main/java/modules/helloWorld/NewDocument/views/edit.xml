@@ -13,7 +13,7 @@
         			<![CDATA[
         				<strong>Welcome!
         						<br/>
-        						Enter some text into the "Text to Echo" field below and click the "Echo Text" button to copy your text into the "Echoed Text" field.
+        						Enter some text into the <em>Text to Echo</em> field below and click the <em>Echo Text</em> button to copy your text into the "Echoed Text" field.
         				</strong>
         			]]>
         		</blurb>
