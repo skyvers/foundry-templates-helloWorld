@@ -1,5 +1,6 @@
 package modules.admin.ReportTemplate.actions;
 
+import org.skyve.CORE;
 import org.skyve.metadata.controller.ServerSideAction;
 import org.skyve.metadata.controller.ServerSideActionResult;
 import org.skyve.util.Util;
@@ -31,7 +32,9 @@ public class CopyReport implements ServerSideAction<ReportTemplate> {
 		newReport.setReportName(bean.getReportName());
 
 		newReport.setName(COPY_PREFIX + bean.getName());
-		newReport.setDescription(COPY_PREFIX + bean.getDescription());
+		if (bean.getDescription() != null) {
+			newReport.setDescription(COPY_PREFIX + bean.getDescription());
+		}
 		newReport.setEnabled(bean.getEnabled());
 		newReport.setIncludeFragment(bean.getIncludeFragment());
 		newReport.setReportType(bean.getReportType());
@@ -51,7 +54,8 @@ public class CopyReport implements ServerSideAction<ReportTemplate> {
 			newReport.getParameters().add(newParameter);
 		}
 		
-		//return the new report
+		// return the new report
+		newReport = CORE.getPersistence().save(newReport);
 		return new ServerSideActionResult<>(newReport);
 	}
 
