@@ -13,7 +13,8 @@ import org.skyve.impl.domain.AbstractTransientBean;
  * <br/>
  * The Demonstration document has two attributes, inputText and outputText for up to 100 characters. 
 		
-		The inputText attribute has a default value of "Hello World".
+		The inputText attribute has a default value of "Hello World", the attribute is marked as required, 
+			meaning no processing should occur unless this attribute has a value.
 		
 		In this demonstration, no data is saved to the database and so this document does not include a <persistent/> tag.
 		
