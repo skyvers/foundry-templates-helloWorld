@@ -14,7 +14,6 @@ import org.skyve.CORE;
 import org.skyve.domain.PersistentBean;
 import org.skyve.domain.messages.ValidationException;
 import org.skyve.impl.metadata.model.document.field.Enumeration;
-import org.skyve.impl.metadata.repository.AbstractRepository;
 import org.skyve.metadata.customer.Customer;
 import org.skyve.metadata.model.Attribute;
 import org.skyve.metadata.model.Attribute.AttributeType;
@@ -30,6 +29,7 @@ public abstract class AbstractDomainTest<T extends PersistentBean> extends Abstr
 	protected abstract T getBean() throws Exception;
 
 	@Test
+	@SuppressWarnings("boxing")
 	public void testDelete() throws Exception {
 		// create the test data
 		T bean = getBean();
@@ -54,6 +54,7 @@ public abstract class AbstractDomainTest<T extends PersistentBean> extends Abstr
 	}
 
 	@Test
+	@SuppressWarnings("boxing")
 	public void testFindAll() throws Exception {
 		// create the test data
 		T b1 = getBean();
@@ -110,7 +111,7 @@ public abstract class AbstractDomainTest<T extends PersistentBean> extends Abstr
 
 			try {
 				getBizlet().getConstantDomainValues(attribute.getName());
-			} catch (ValidationException e) {
+			} catch (@SuppressWarnings("unused") ValidationException e) {
 				// pass - bizlet validated incorrect input
 			}
 		}
@@ -139,7 +140,7 @@ public abstract class AbstractDomainTest<T extends PersistentBean> extends Abstr
 
 			try {
 				getBizlet().getDynamicDomainValues(attribute.getName(), getBean());
-			} catch (ValidationException e) {
+			} catch (@SuppressWarnings("unused") ValidationException e) {
 				// pass - bizlet validated incorrect input
 			}
 		}
@@ -168,13 +169,14 @@ public abstract class AbstractDomainTest<T extends PersistentBean> extends Abstr
 
 			try {
 				getBizlet().getVariantDomainValues(attribute.getName());
-			} catch (ValidationException e) {
+			} catch (@SuppressWarnings("unused") ValidationException e) {
 				// pass - bizlet validated incorrect input
 			}
 		}
 	}
 
 	@Test
+	@SuppressWarnings("boxing")
 	public void testSave() throws Exception {
 		// create the test data
 		T bean = getBean();
@@ -191,8 +193,9 @@ public abstract class AbstractDomainTest<T extends PersistentBean> extends Abstr
 		assertThat(result.getBizId(), is(notNullValue()));
 	}
 
-	@Timeout(30)
 	@Test
+	@Timeout(30)
+	@SuppressWarnings("boxing")
 	public void testUpdate() throws Exception {
 		// create the test data
 		T bean = getBean();
@@ -230,7 +233,7 @@ public abstract class AbstractDomainTest<T extends PersistentBean> extends Abstr
 
 			// verify the results
 			assertThat("Error updating " + attributeToUpdate.getName(), Binder.get(uResult, attributeToUpdate.getName()),
-					is(not(originalValue)));
+						is(not(originalValue)));
 		} else {
 			Util.LOGGER.fine(String.format("Skipping update test for %s, no scalar attribute found", bean.getBizDocument()));
 		}
@@ -240,7 +243,7 @@ public abstract class AbstractDomainTest<T extends PersistentBean> extends Abstr
 		Customer customer = CORE.getUser().getCustomer();
 		Module module = customer.getModule(bean.getBizModule());
 		Document document = module.getDocument(customer, bean.getBizDocument());
-		ArrayList<? extends Attribute> allAttributes = new ArrayList<>(document.getAllAttributes());
+		ArrayList<? extends Attribute> allAttributes = new ArrayList<>(document.getAllAttributes(customer));
 		return allAttributes;
 	}
 
@@ -249,7 +252,7 @@ public abstract class AbstractDomainTest<T extends PersistentBean> extends Abstr
 		Module module = customer.getModule(getBean().getBizModule());
 		Document document = module.getDocument(customer, getBean().getBizDocument());
 
-		return AbstractRepository.get().getBizlet(customer, document, true);
+		return document.getBizlet(customer);
 	}
 
 	private Attribute getRandomAttribute(T bean) {
@@ -258,7 +261,7 @@ public abstract class AbstractDomainTest<T extends PersistentBean> extends Abstr
 		Document document = module.getDocument(customer, bean.getBizDocument());
 		Attribute transientAttribute = null;
 
-		ArrayList<? extends Attribute> allAttributes = new ArrayList<>(document.getAllAttributes());
+		ArrayList<? extends Attribute> allAttributes = new ArrayList<>(document.getAllAttributes(customer));
 
 		// randomise the attributes in the collection
 		Collections.shuffle(allAttributes);

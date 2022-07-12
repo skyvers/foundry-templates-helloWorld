@@ -15,7 +15,7 @@ import org.skyve.content.ContentIterable.ContentIterator;
 import org.skyve.content.ContentManager;
 import org.skyve.content.SearchResult;
 import org.skyve.domain.Bean;
-import org.skyve.domain.MapBean;
+import org.skyve.domain.DynamicBean;
 import org.skyve.domain.PersistentBean;
 import org.skyve.domain.types.OptimisticLock;
 import org.skyve.domain.types.Timestamp;
@@ -34,8 +34,6 @@ import modules.admin.domain.Content;
 import modules.admin.domain.DataMaintenance;
 
 public class ContentModel extends ListModel<DataMaintenance> {
-	private static final long serialVersionUID = -5285830669475992183L;
-
 	private Document drivingDocument = null;
 	private Set<String> projections = new TreeSet<>();
 	private List<MetaDataQueryColumn> columns = new ArrayList<>(1);
@@ -113,13 +111,13 @@ public class ContentModel extends ListModel<DataMaintenance> {
 	}
 
 	@Override
-	public Filter getFilter() throws Exception {
+	public Filter getFilter() {
 		// not required
 		return null;
 	}
 
 	@Override
-	public Filter newFilter() throws Exception {
+	public Filter newFilter() {
 		// not required
 		return null;
 	}
@@ -148,12 +146,14 @@ public class ContentModel extends ListModel<DataMaintenance> {
 				String bizDataGroupId = hit.getBizDataGroupId();
 				String bizUserId = hit.getBizUserId();
 				String bizId = hit.getBizId();
-				if (AbstractContentManager.canReadContent(bizCustomer, 
-															bizModule, 
-															bizDocument, 
-															bizDataGroupId, 
-															bizUserId, 
-															bizId)) {
+				String attributeName = hit.getAttributeName();
+				if (AbstractContentManager.canAccessContent(bizCustomer, 
+																bizModule, 
+																bizDocument, 
+																bizDataGroupId, 
+																bizUserId, 
+																bizId,
+																attributeName)) {
 					if (i >= start) {
 						String contentId = hit.getContentId();
 						Map<String, Object> properties = new TreeMap<>();
@@ -177,7 +177,7 @@ public class ContentModel extends ListModel<DataMaintenance> {
 						properties.put(Content.documentNamePropertyName, bizDocument);
 						properties.put(Content.moduleNamePropertyName, bizModule);
 						properties.put(Content.contentPropertyName, hit.getExcerpt());
-						rows.add(new MapBean(Content.MODULE_NAME, Content.DOCUMENT_NAME, properties));
+						rows.add(new DynamicBean(Content.MODULE_NAME, Content.DOCUMENT_NAME, properties));
 	
 						if (i >= end) {
 							break;
@@ -197,7 +197,7 @@ public class ContentModel extends ListModel<DataMaintenance> {
 
 			Map<String, Object> properties = new TreeMap<>();
 			properties.put(PersistentBean.FLAG_COMMENT_NAME, null);
-			page.setSummary(new MapBean(Content.MODULE_NAME, Content.DOCUMENT_NAME, properties));
+			page.setSummary(new DynamicBean(Content.MODULE_NAME, Content.DOCUMENT_NAME, properties));
 			return page;
 		}
 	}

@@ -50,6 +50,7 @@ public class UserDashboardExtension extends UserDashboard {
 	 * 
 	 * @return true if the jobs list should be visible in the User Dashboard
 	 */
+	@SuppressWarnings("static-method")
 	public boolean canReadJobs() {
 		Module module = CORE.getCustomer().getModule(Job.MODULE_NAME);
 		Document document = module.getDocument(CORE.getCustomer(), Job.DOCUMENT_NAME);
@@ -213,7 +214,8 @@ public class UserDashboardExtension extends UserDashboard {
 					break;
 				}
 			}
-		} catch (Exception e) {
+		}
+		catch (@SuppressWarnings("unused") Exception e) {
 			// TODO: handle exception
 			Util.LOGGER.warning("Failed to create " + reason + " tile.");
 		}
@@ -332,7 +334,7 @@ public class UserDashboardExtension extends UserDashboard {
 				tileOperation = Tile.Operation.delete;
 
 				// clear the link if the user does not have delete permission
-				if (!CORE.getUser().canDeleteDocument(document)) {
+				if (! user.canDeleteDocument(document)) {
 					link.setLength(0);
 				}
 				break;
@@ -342,7 +344,7 @@ public class UserDashboardExtension extends UserDashboard {
 				tileOperation = Tile.Operation.insert;
 
 				// clear the link if the user does not have create permission
-				if (!CORE.getUser().canCreateDocument(document)) {
+				if (! user.canCreateDocument(document)) {
 					link.setLength(0);
 				}
 				break;
@@ -353,26 +355,27 @@ public class UserDashboardExtension extends UserDashboard {
 					actionClass = "fa-chevron-right";
 
 					// clear the link if the user does not have read permission
-					if (!CORE.getUser().canReadDocument(document)) {
+					if (! user.canReadDocument(document)) {
 						link.setLength(0);
 					}
-				} else {
-					action = operation.toDescription();
+				}
+				else {
+					action = operation.toLocalisedDescription();
 					actionClass = "fa-angle-up";
 					tileOperation = Tile.Operation.update;
 
 					// clear the link if the user does not have update permission
-					if (!CORE.getUser().canUpdateDocument(document)) {
+					if (! user.canUpdateDocument(document)) {
 						link.setLength(0);
 					}
 				}
 				break;
 			default:
-				action = operation.toDescription();
+				action = operation.toLocalisedDescription();
 				actionClass = "fa-chevron-right";
 
 				// clear the link if the user does not have read permission
-				if (!CORE.getUser().canReadDocument(document)) {
+				if (! user.canReadDocument(document)) {
 					link.setLength(0);
 				}
 		}
@@ -385,7 +388,7 @@ public class UserDashboardExtension extends UserDashboard {
 
 		if (bean != null) {
 			// provide a thumbnail for the first image or content attribute type
-			for (Attribute a : document.getAllAttributes()) {
+			for (Attribute a : document.getAllAttributes(customer)) {
 				if (AttributeType.content.equals(a.getAttributeType())
 						|| AttributeType.image.equals(a.getAttributeType())) {
 					String cId = (String) Binder.get(bean, a.getName());

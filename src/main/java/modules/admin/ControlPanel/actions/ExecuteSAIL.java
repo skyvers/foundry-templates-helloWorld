@@ -19,8 +19,6 @@ import modules.admin.domain.ControlPanel.SailExecutor;
 import modules.admin.domain.UserProxy;
 
 public class ExecuteSAIL implements ServerSideAction<ControlPanelExtension> {
-	private static final long serialVersionUID = -4884065778373508731L;
-
 	@Override
 	public ServerSideActionResult<ControlPanelExtension> execute(ControlPanelExtension bean, WebContext webContext)
 	throws Exception {
@@ -92,7 +90,7 @@ public class ExecuteSAIL implements ServerSideAction<ControlPanelExtension> {
 		AbstractPersistence p = (AbstractPersistence) CORE.getPersistence();
 		User currentUser = p.getUser();
 		try {
-			Automation automation = XMLMetaData.unmarshalSAIL(bean.getSail());
+			Automation automation = XMLMetaData.unmarshalSAILString(bean.getSail());
 
 			Repository r = CORE.getRepository();
 			@SuppressWarnings("null")

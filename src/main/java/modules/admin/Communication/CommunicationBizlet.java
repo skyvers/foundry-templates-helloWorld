@@ -2,6 +2,7 @@ package modules.admin.Communication;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,8 +30,6 @@ import modules.admin.domain.CommunicationTemplate;
 import modules.admin.domain.Tag;
 
 public class CommunicationBizlet extends Bizlet<Communication> {
-	private static final long serialVersionUID = -7404508611264793559L;
-
 	public static final String SYSTEM_COMMUNICATION_JOB_NOTIFICATION = "SYSTEM Communication Job Notification";
 	public static final String SYSTEM_COMMUNICATION_JOB_DEFAULT_SUBJECT = "Bulk Communication Job for '{description}' - Complete";
 	public static final String SYSTEM_COMMUNICATION_JOB_DEFAULT_BODY = "The bulk communication job '{description}' for Tag '{tag.name}' is complete." + JobsBizlet.SYSTEM_JOB_NOTIFICATION_LINK_TO_JOBS;
@@ -82,6 +81,7 @@ public class CommunicationBizlet extends Bizlet<Communication> {
 					Document document = module.getDocument(customer, documentName);
 					result.add(new DomainValue(document.getName(), document.getLocalisedSingularAlias()));
 				}
+				result.sort(Comparator.comparing(DomainValue::getLocalisedDescription));
 			}
 		}
 
@@ -133,11 +133,11 @@ public class CommunicationBizlet extends Bizlet<Communication> {
 			Document document = module.getDocument(customer, Communication.DOCUMENT_NAME);
 
 			StringBuilder sb = new StringBuilder(64);
-			sb.append(document.getAttribute(Communication.systemUsePropertyName).getLocalisedDisplayName());
-			sb.append(' ').append(document.getLocalisedPluralAlias());
+			@SuppressWarnings("null")
+			String su = document.getAttribute(Communication.systemUsePropertyName).getLocalisedDisplayName();
+			sb.append(su).append(' ').append(document.getLocalisedPluralAlias());
 			sb.append(" may not be deleted unless ");
-			sb.append(document.getAttribute(Communication.systemUsePropertyName).getLocalisedDisplayName());
-			sb.append(" is set to FALSE.");
+			sb.append(su).append(" is set to FALSE.");
 
 			throw new ValidationException(new Message(sb.toString()));
 		}

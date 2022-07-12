@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 import org.skyve.CORE;
@@ -15,8 +16,6 @@ import org.skyve.domain.types.DateTime;
 import org.skyve.util.FileUtil;
 import org.skyve.util.JSON;
 import org.skyve.util.Util;
-
-import com.ibm.icu.text.SimpleDateFormat;
 
 import modules.admin.domain.ReportManager;
 import modules.admin.domain.ReportTemplate;
@@ -36,7 +35,7 @@ public class ReportManagerExtension extends ReportManager {
 	 * 
 	 * @return
 	 */
-	public String getBasePath() {
+	public static String getBasePath() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(Util.getContentDirectory());
 		sb.append(REPORTS_BATCH_PREFIX).append(CORE.getUser().getCustomerName());
@@ -48,7 +47,7 @@ public class ReportManagerExtension extends ReportManager {
 	 * 
 	 * @return the folder
 	 */
-	public File getTemporaryPreparationFolder() {
+	public static File getTemporaryPreparationFolder() {
 
 		// make a temporary directory for the JSON files to be zipped
 		StringBuilder sb = new StringBuilder(getBasePath());
@@ -67,7 +66,7 @@ public class ReportManagerExtension extends ReportManager {
 	/**
 	 * Construct a useful name for the download zip file
 	 */
-	public String getZipName() {
+	public static String getZipName() {
 		SimpleDateFormat sdf = new SimpleDateFormat(ZIP_NAME_FORMAT);
 		StringBuilder zipName = new StringBuilder();
 		zipName.append(REPORTS_BATCH_PREFIX).append(sdf.format(new DateTime())).append(".").append(MimeType.zip.getStandardFileSuffix());
@@ -79,7 +78,7 @@ public class ReportManagerExtension extends ReportManager {
 	 * 
 	 * @return
 	 */
-	public File getZipFile() {
+	public static File getZipFile() {
 		StringBuilder zipPath = new StringBuilder(getBasePath());
 		zipPath.append(File.separator).append(getZipName());
 		return new File(zipPath.toString());
@@ -88,7 +87,7 @@ public class ReportManagerExtension extends ReportManager {
 	/**
 	 * delete temporary files and folders
 	 */
-	public void cleanUpTemporaryFiles() {
+	public static void cleanUpTemporaryFiles() {
 		// clean up temporary folder
 		try {
 			FileUtil.delete(new File(getBasePath()));

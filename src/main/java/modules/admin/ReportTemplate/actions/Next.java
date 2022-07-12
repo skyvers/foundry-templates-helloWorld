@@ -11,8 +11,6 @@ import modules.admin.domain.ReportTemplate.WizardState;
 
 public class Next implements ServerSideAction<ReportTemplateExtension> {
 
-	private static final long serialVersionUID = -921560136855719078L;
-
 	@Override
 	public ServerSideActionResult<ReportTemplateExtension> execute(ReportTemplateExtension bean, WebContext webContext)
 			throws Exception {
@@ -36,7 +34,7 @@ public class Next implements ServerSideAction<ReportTemplateExtension> {
 	/**
 	 * Reset the markup field state to the initial state.
 	 */
-	private void resetState(ReportTemplateExtension bean) {
+	private static void resetState(ReportTemplateExtension bean) {
 		bean.getParameters().clear();
 		bean.getDatasets().clear();
 		bean.setTemplate(null);

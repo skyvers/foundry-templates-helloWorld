@@ -18,9 +18,6 @@ import modules.admin.domain.Startup;
 import modules.admin.domain.User;
 
 public class ConfigurationBizlet extends SingletonCachedBizlet<ConfigurationExtension> {
-
-	private static final long serialVersionUID = -1282437688681930236L;
-
 	@Override
 	public ConfigurationExtension newInstance(ConfigurationExtension bean) throws Exception {
 		// temporarily elevate access to find existing configuration regardless of user
@@ -52,10 +49,10 @@ public class ConfigurationBizlet extends SingletonCachedBizlet<ConfigurationExte
 		if (result.getPasswordResetEmailBody() == null) {
 			String body = String.format("<html><head/><body>Hi {%s},<p/>" +
 					"Please click below to reset your password.<p/>" +
-					"<a href=\"{url}/pages/resetPassword.jsp?t={%s}\">" +
+					"<a href=\"{#resetPasswordUrl}\">" +
 					"Reset Password</a></body></html>",
-					Binder.createCompoundBinding(User.contactPropertyName, Contact.namePropertyName),
-					User.passwordResetTokenPropertyName);
+					Binder.createCompoundBinding(User.contactPropertyName, Contact.namePropertyName)
+				);
 			result.setPasswordResetEmailBody(body);
 		}
 

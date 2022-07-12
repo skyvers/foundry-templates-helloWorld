@@ -25,14 +25,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Preview extends DownloadAction<ReportDesign> {
-
-	private static final long serialVersionUID = -8203773871581974793L;
-
 	@Override
 	public void prepare(ReportDesign bean, WebContext webContext)
 	throws Exception {
-		// TODO Auto-generated method stub
-
+		// Nothing to see here
 	}
 
 	@Override
@@ -59,7 +55,7 @@ public class Preview extends DownloadAction<ReportDesign> {
 			final String queryName = designSpecification.getQueryName();
 			final String documentName = designSpecification.getDocumentName();
 			final String documentOrQueryOrModelName = queryName != null ? queryName : documentName;
-			final ListModel<Bean> listModel = JasperReportUtil.getDocumentQueryListModel(module, documentOrQueryOrModelName);
+			final ListModel<Bean> listModel = JasperReportUtil.getQueryListModel(module, documentOrQueryOrModelName);
 			JasperReportUtil.runReport(reportRenderer.getReport(),
 					user,
 					parameters,

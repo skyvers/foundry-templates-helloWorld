@@ -31,8 +31,6 @@ import modules.admin.domain.ReportTemplate;
 
 public class ImportReportSpecifications extends UploadAction<ReportManagerExtension> {
 
-	private static final long serialVersionUID = 8644012510601735978L;
-
 	/**
 	 * Upload a zip containing a number of report configurations
 	 * unzip to a temporary folder
@@ -53,12 +51,13 @@ public class ImportReportSpecifications extends UploadAction<ReportManagerExtens
 	
 				try {
 					PersistentBean pb = (PersistentBean) JSON.unmarshall(CORE.getUser(), json);
-					validateReport(pb, true, null);
 	
 					if (bean.getImportActionType() == ImportActionType.validateOnlyReportConfigurationsAndTemplates) {
+						validateReport(pb, false, null);
 						webContext.growl(MessageSeverity.info, "Report validated ok - select import option to import this report");
 						return bean;
 					}
+					validateReport(pb, true, null);
 	
 					// now load
 					pb = (PersistentBean) JSON.unmarshall(CORE.getUser(), json);
@@ -75,9 +74,9 @@ public class ImportReportSpecifications extends UploadAction<ReportManagerExtens
 			} else if (MimeType.zip.getStandardFileSuffix().equals(ext)) {
 	
 				// store the uploaded zip
-				File outdir = bean.getTemporaryPreparationFolder();
+				File outdir = ReportManagerExtension.getTemporaryPreparationFolder();
 				bean.setPathToZip(outdir.getAbsolutePath());
-				File importFile = bean.getZipFile();
+				File importFile = ReportManagerExtension.getZipFile();
 				Files.copy(in, Paths.get(importFile.getAbsolutePath()));
 	
 				// extract the report configurations from the zip
@@ -153,7 +152,9 @@ public class ImportReportSpecifications extends UploadAction<ReportManagerExtens
 			if (withRemove) {
 				removePreviousTemplate(newTemplate.getName());
 			} else {
-				templatesToReplace.add(newTemplate.getName());
+				if(templatesToReplace!=null) {
+					templatesToReplace.add(newTemplate.getName());
+				}
 			}
 		}
 	}
@@ -191,7 +192,7 @@ public class ImportReportSpecifications extends UploadAction<ReportManagerExtens
 				newTemplate = CORE.getPersistence().save(newTemplate);
 			} catch (Exception e) {
 				e.printStackTrace();
-				bean.cleanUpTemporaryFiles();
+				ReportManagerExtension.cleanUpTemporaryFiles();
 				throw new ValidationException(new Message("The report template " + newTemplate.getName() + " could not be saved."));
 			}
 		}

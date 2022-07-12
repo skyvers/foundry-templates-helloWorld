@@ -23,8 +23,6 @@ import modules.admin.domain.Audit.Operation;
 import modules.admin.domain.UserLoginRecord;
 
 public class RDBMSAuditInterceptor extends Interceptor {
-	private static final long serialVersionUID = 8133933539853560711L;
-
 	private static final ThreadLocal<Map<String, Operation>> BIZ_ID_TO_OPERATION = new ThreadLocal<>();
 
 	@Override
@@ -73,6 +71,7 @@ public class RDBMSAuditInterceptor extends Interceptor {
 		if (ad.isAudited()) {
 			// Check if there exists an insert audit record.
 			Module m = c.getModule(Audit.MODULE_NAME);
+			@SuppressWarnings("null")
 			String persistentIdentifier = m.getDocument(c, Audit.DOCUMENT_NAME).getPersistent().getPersistentIdentifier();
 
 			// Cater for multi-tenancy
@@ -107,7 +106,7 @@ public class RDBMSAuditInterceptor extends Interceptor {
 				// To do this we need to get the database state before this update operation
 				// We can do this by getting a new persistence and loading the record,
 				// getting the JSON for it and then inserting it in our current thread's persistence.
-				AbstractHibernatePersistence tempP = (AbstractHibernatePersistence) p.getClass().newInstance();
+				AbstractHibernatePersistence tempP = (AbstractHibernatePersistence) p.getClass().getConstructor().newInstance();
 				try {
 					tempP.setUser(p.getUser());
 					PersistentBean oldBean = tempP.retrieve(bean.getBizModule(), bean.getBizDocument(), bean.getBizId());
