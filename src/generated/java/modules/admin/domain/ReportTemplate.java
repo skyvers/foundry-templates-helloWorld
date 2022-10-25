@@ -1634,7 +1634,9 @@ return getName() != null ? String.format("Report - %s", getName()) : "New Report
 	 **/
 	public boolean addDatasetsElement(ReportDatasetExtension element) {
 		boolean result = datasets.add(element);
-		element.setParent((ReportTemplateExtension) this);
+		if (result) {
+			element.setParent((ReportTemplateExtension) this);
+		}
 		return result;
 	}
 
@@ -1654,7 +1656,9 @@ return getName() != null ? String.format("Report - %s", getName()) : "New Report
 	 **/
 	public boolean removeDatasetsElement(ReportDatasetExtension element) {
 		boolean result = datasets.remove(element);
-		element.setParent(null);
+		if (result) {
+			element.setParent(null);
+		}
 		return result;
 	}
 
@@ -1701,7 +1705,9 @@ return getName() != null ? String.format("Report - %s", getName()) : "New Report
 	 **/
 	public boolean addParametersElement(ReportParameterExtension element) {
 		boolean result = parameters.add(element);
-		element.setParent((ReportTemplateExtension) this);
+		if (result) {
+			element.setParent((ReportTemplateExtension) this);
+		}
 		return result;
 	}
 
@@ -1721,7 +1727,9 @@ return getName() != null ? String.format("Report - %s", getName()) : "New Report
 	 **/
 	public boolean removeParametersElement(ReportParameterExtension element) {
 		boolean result = parameters.remove(element);
-		element.setParent(null);
+		if (result) {
+			element.setParent(null);
+		}
 		return result;
 	}
 
@@ -3414,6 +3422,27 @@ return getName() != null ? String.format("Report - %s", getName()) : "New Report
 		if (this.newUserToEmail != newUserToEmail) {
 			this.newUserToEmail = newUserToEmail;
 		}
+	}
+
+	/**
+	 * Shows the Scheduling tab if the user has permissions to save changes to reports.
+	 *
+	 * @return The condition
+	 */
+	@XmlTransient
+	public boolean isCanSchedule() {
+		return (isUserInOwningModuleRole("BasicUser") 
+						|| isUserInOwningModuleRole("DevOps")
+						|| isUserInOwningModuleRole("SecurityAdministrator"));
+	}
+
+	/**
+	 * {@link #isCanSchedule} negation.
+	 *
+	 * @return The negated condition
+	 */
+	public boolean isNotCanSchedule() {
+		return (! isCanSchedule());
 	}
 
 	/**
