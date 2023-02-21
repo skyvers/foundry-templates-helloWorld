@@ -77,6 +77,10 @@
 				<document name="SelfRegistrationActivation" permission="_____"/>
 				<document name="Subscription" permission="_____"/>
 			</privileges>
+			<accesses>
+				<singular document="SelfRegistration" />
+				<singular document="SelfRegistrationActivation" />
+			</accesses>
 		</role>
 		<role name="AppUser">
 			<documentation>
