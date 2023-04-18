@@ -214,7 +214,15 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>SkyveFilter</filter-name>
+		<servlet-name>MetaDataServlet</servlet-name>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SkyveFilter</filter-name>
 		<servlet-name>BizportExportServlet</servlet-name>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>SkyveFilter</filter-name>
+		<servlet-name>HealthServlet</servlet-name>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>SkyveFilter</filter-name>
@@ -538,6 +546,14 @@
 	</servlet-mapping>
 
 	<servlet>
+		<servlet-name>MetaDataServlet</servlet-name>
+		<servlet-class>org.skyve.impl.web.service.MetaDataServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MetaDataServlet</servlet-name>
+		<url-pattern>/meta</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>ChartServlet</servlet-name>
 		<servlet-class>org.skyve.impl.web.service.ChartServlet</servlet-class>
 	</servlet>
@@ -545,7 +561,6 @@
 		<servlet-name>ChartServlet</servlet-name>
 		<url-pattern>/chart</url-pattern>
 	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>MapServlet</servlet-name>
 		<servlet-class>org.skyve.impl.web.service.MapServlet</servlet-class>
@@ -553,6 +568,14 @@
 	<servlet-mapping>
 		<servlet-name>MapServlet</servlet-name>
 		<url-pattern>/map</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>HealthServlet</servlet-name>
+		<servlet-class>org.skyve.impl.web.service.HealthServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HealthServlet</servlet-name>
+		<url-pattern>/health</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>TrackmateServlet</servlet-name>

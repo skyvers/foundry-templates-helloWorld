@@ -50,6 +50,8 @@ public class SpringSecurityConfig {
 				.antMatchers("/home.jsp").permitAll()
 				// Permit device.jsp as it forwards to home.jsp
 				.antMatchers("/device.jsp").permitAll()
+				// Permit the health servlet resource
+				.antMatchers("/health").permitAll()
 				// Secure the loggedIn.jsp so that redirect occurs after login
 				.antMatchers("/loggedIn.jsp").authenticated()
 				// Secure the system JSPs and HTMLs
@@ -68,6 +70,8 @@ public class SpringSecurityConfig {
 				.antMatchers("/image").authenticated()
 				// Secure customer resource servlet
 				.antMatchers("/resource", "/content").authenticated()
+				// Secure meta data servlet
+				.antMatchers("/meta").authenticated()
 				// Secure SC edit view servlet
 				.antMatchers("/smartedit").authenticated()
 				// Secure SC list view servlet
