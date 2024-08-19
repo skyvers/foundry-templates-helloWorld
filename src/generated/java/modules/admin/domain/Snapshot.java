@@ -1,9 +1,10 @@
 package modules.admin.domain;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.annotation.Generated;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import modules.admin.UserProxy.UserProxyExtension;
 import org.skyve.CORE;
 import org.skyve.domain.messages.DomainException;
@@ -17,6 +18,7 @@ import org.skyve.impl.domain.AbstractPersistentBean;
  */
 @XmlType
 @XmlRootElement
+@Generated(value = "org.skyve.impl.generate.OverridableDomainGenerator")
 public class Snapshot extends AbstractPersistentBean {
 	/**
 	 * For Serialization
@@ -43,6 +45,9 @@ public class Snapshot extends AbstractPersistentBean {
 	public static final String snapshotPropertyName = "snapshot";
 
 	/** @hidden */
+	public static final String ordinalPropertyName = "ordinal";
+
+	/** @hidden */
 	public static final String copyToUserPropertyName = "copyToUser";
 
 	/** @hidden */
@@ -67,6 +72,11 @@ public class Snapshot extends AbstractPersistentBean {
 	 * Snapshot Code
 	 **/
 	private String snapshot;
+
+	/**
+	 * Ordinal
+	 **/
+	private Integer ordinal;
 
 	/**
 	 * Copy to user
@@ -189,6 +199,24 @@ public class Snapshot extends AbstractPersistentBean {
 	public void setSnapshot(String snapshot) {
 		preset(snapshotPropertyName, snapshot);
 		this.snapshot = snapshot;
+	}
+
+	/**
+	 * {@link #ordinal} accessor.
+	 * @return	The value.
+	 **/
+	public Integer getOrdinal() {
+		return ordinal;
+	}
+
+	/**
+	 * {@link #ordinal} mutator.
+	 * @param ordinal	The new value.
+	 **/
+	@XmlElement
+	public void setOrdinal(Integer ordinal) {
+		preset(ordinalPropertyName, ordinal);
+		this.ordinal = ordinal;
 	}
 
 	/**

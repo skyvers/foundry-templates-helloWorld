@@ -1,6 +1,3 @@
-/*@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,400italic,600italic|Roboto+Slab:400,700");*/
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,400italic,600italic");
-
 /* PF tweaks */
 .ui-datatable-data > tr {
 	text-align: center !important;
@@ -10,6 +7,23 @@
 }
 .ui-datatable thead th {
 	padding: 4px !important;
+}
+
+/* Device sizing */
+@media (min-width: 641px) {
+	body .ui-widget {
+		font-size: 1rem !important;
+	}
+}
+@media (min-width: 737px) {
+	body .ui-widget {
+		font-size: 0.95rem !important;
+	}
+}
+@media (min-width: 1281px) {
+	body .ui-widget {
+		font-size: 0.9rem !important;
+	}
 }
 
 /*
@@ -2533,6 +2547,7 @@ mark {
 		-ms-flex-shrink: 1;
 		flex-shrink: 1;
 		width: 100%;
+		min-width: 0;
 	}
 
 		#main > .inner {
@@ -2849,12 +2864,12 @@ mark {
 			-ms-flex: 1;
 			flex: 1;
 			margin-bottom: 0;
+			border: 0 !important;
 		}
 
 		#header .logo {
 			border-bottom: 0;
-			color: inherit;
-			font-size: 2em;
+			font-size: 1.8em !important;
 		}
 
 		#header .icons {
@@ -2864,7 +2879,12 @@ mark {
 
 		@media screen and (max-width: 1280px) {
 			#header {
-				padding-top: 3.5em;
+				padding-top: 2.2em;
+			}
+		}
+		@media screen and (max-width: 736px) {
+			#header {
+				padding-top: 3em;
 			}
 		}
 		
@@ -2979,6 +2999,6 @@ mark {
 		font-size: 0.9em;
 	}
 
-		#footer .copyright a {
-			color: inherit;
-		}
+	#footer .copyright a {
+		color: inherit;
+	}

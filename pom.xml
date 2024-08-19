@@ -14,11 +14,10 @@
 	<properties>
 		<finalName>${project.artifactId}</finalName>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<skyve.version>8.3.0</skyve.version>
+		<skyve.version>9.1.1</skyve.version>
 		<build.number>${project.version}</build.number>
 		<forkCount>2</forkCount>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<skipUnitTests>false</skipUnitTests>
 		<skipIntegrationTests>true</skipIntegrationTests>
 	</properties>
@@ -40,14 +39,6 @@
 			<id>Prime Faces</id>
 			<url>https://repository.primefaces.org/</url>
 		</repository>
-		<repository>
-			<id>boundlessgeo</id>
-			<url>https://repo.osgeo.org/repository/release/</url>
-		</repository>
-		<repository>
-			<id>jaspersoft</id>
-			<url>https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/</url>
-		</repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -63,25 +54,25 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.1</version>
+					<version>3.11.0</version>
 					<configuration>
-						<source>11</source>
-						<target>11</target>
+						<source>17</source>
+						<target>17</target>
 					</configuration>
 				</plugin>
 				<plugin>
 					<artifactId>maven-war-plugin</artifactId>
-					<version>3.3.2</version>
+					<version>3.4.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
-					<version>1.5.0</version>
+					<version>3.1.0</version>
 				</plugin>
 				<plugin>
 					<groupId>nl.geodienstencentrum.maven</groupId>
 					<artifactId>sass-maven-plugin</artifactId>
-					<version>3.5.5</version>
+					<version>3.7.2</version>
 				</plugin>
 				<!-- This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
 				<plugin>
@@ -107,7 +98,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -126,7 +117,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
@@ -173,6 +164,25 @@
 							<includePluginDependencies>true</includePluginDependencies>
 						</configuration>
 					</execution>
+					<execution>
+						<!-- Generate javadoc package HTMLs: mvn exec:java@generate-javadoc-package-htmls -->
+						<id>generate-javadoc-package-htmls</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<mainClass>org.skyve.impl.tools.javadoc.doctor.DoctorUtil</mainClass>
+							<skip>${maven.javadoc.skip}</skip>
+							<arguments>
+								<argument>src/generated/java/</argument> <!-- source path -->
+								<argument>skyve</argument>     <!-- customerName -->
+								<!-- list all modules as arguments here -->
+								<argument>admin</argument>
+							</arguments>
+							<includePluginDependencies>true</includePluginDependencies>
+						</configuration>
+					</execution>
 				</executions>
 				<dependencies>
 					<dependency>
@@ -185,20 +195,25 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.2</version>
+				<version>3.1.2</version>
 				<configuration>
+					<excludes>
+						<exclude>**/*IT</exclude>
+					</excludes>
 					<skipTests>${skipUnitTests}</skipTests>
+					<rerunFailingTestsCount>2</rerunFailingTestsCount>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>3.1.2</version>
 				<executions>
 					<execution>
 						<id>integration-tests</id>
 						<goals>
 							<goal>integration-test</goal>
+							<goal>verify</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -209,7 +224,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.7</version>
+				<version>3.1.1</version>
 				<configuration>
 					<skip>true</skip>
 				</configuration>
@@ -217,7 +232,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-install-plugin</artifactId>
-				<version>2.4</version>
+				<version>3.1.1</version>
 				<configuration>
 					<skip>true</skip>
 				</configuration>
@@ -225,7 +240,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.3.0</version>
 				<configuration>
 					<skipSource>true</skipSource>
 				</configuration>
@@ -238,7 +253,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.3.1</version>
 				<configuration>
 					<filesets>
 						<fileset>
@@ -300,7 +315,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.4.0</version>
 				<executions>
 					<execution>
 						<id>add-source</id>
@@ -332,7 +347,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.1.2</version>
+				<version>3.7.0</version>
 				<executions>
 					<execution>
 						<id>copy-content-addin-dependency</id>
@@ -348,6 +363,7 @@
 									<type>zip</type>
 									<version>${skyve.version}</version>
 									<outputDirectory>target</outputDirectory>
+									<destFileName>skyve-content-${skyve.version}.zip</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
@@ -356,52 +372,8 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.scm</groupId>
-						<artifactId>maven-scm-provider-gitexe</artifactId>
-						<version>1.9.5</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<!-- Generate javadoc package HTMLs: mvn exec:java@generate-javadoc-package-htmls -->
-						<id>generate-javadoc-package-htmls</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>java</goal>
-						</goals>
-						<configuration>
-							<mainClass>org.skyve.impl.tools.javadoc.doctor.DoctorUtil</mainClass>
-							<skip>${maven.javadoc.skip}</skip>
-							<arguments>
-								<argument>src/generated/java/</argument> <!-- source path -->
-								<argument>skyve</argument>            <!-- customerName -->
-								<!-- list all modules as arguments here -->
-								<argument>admin</argument>
-							</arguments>
-							<includePluginDependencies>true</includePluginDependencies>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>org.skyve</groupId>
-						<artifactId>skyve-tools</artifactId>
-						<version>${skyve.version}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.5.0</version>
 				<configuration>
 					<skip>${maven.javadoc.skip}</skip>
 					<show>private</show>
@@ -451,62 +423,95 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>7.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.skyve</groupId>
-			<artifactId>skyve-ee</artifactId>
+			<artifactId>skyve-web</artifactId>
 			<version>${skyve.version}</version>
+			<scope>compile</scope>
 		</dependency>
-
+		
+		<!--Ipinfo dependency-->
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-csv</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.3.173</version>
-		</dependency>
+	        <groupId>io.ipinfo</groupId>
+	        <artifactId>ipinfo-api</artifactId>
+	        <version>3.0.0</version>
+	        <scope>compile</scope>
+	    </dependency>
 
 		<!-- Test dependencies -->
+		<!--JUnit Jupiter Engine to depend on the JUnit5 engine and JUnit 5 API -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.7.1</version>
+			<version>5.10.2</version>
 			<scope>test</scope>
 		</dependency>
+		<!--JUnit Jupiter Vintage Engine to depend on the JUnit4 engine and JUnit 4 API  -->
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
 			<artifactId>junit-vintage-engine</artifactId>
-			<version>5.7.1</version>
+			<version>5.10.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.jboss.weld.se</groupId>
-			<artifactId>weld-se</artifactId>
-			<version>2.4.4.Final</version>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>4.2.0</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!--  Jakarta CDI implementation -->
+		<dependency>
+			<groupId>org.jboss.weld.se</groupId>
+			<artifactId>weld-se-core</artifactId>
+			<version>5.1.2.Final</version>
+			<scope>test</scope>
+		</dependency>
+		<!--  Jakarta Mail implementation -->
+		<dependency>
+			<groupId>org.eclipse.angus</groupId>
+			<artifactId>jakarta.mail</artifactId>
+			<version>2.0.2</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Jakarta EL implementation -->
+		<dependency>
+		    <groupId>org.glassfish.expressly</groupId>
+		    <artifactId>expressly</artifactId>
+			<version>5.0.0</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Mock Jakarta EE interfaces for omnifaces CDI bootstrap -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>6.1.3</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Selenium -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-support</artifactId>
 			<version>3.141.59</version>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>net.bytebuddy</groupId>
-					<artifactId>byte-buddy</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.google.guava</groupId>
-					<artifactId>guava</artifactId>
-				</exclusion>
-			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.9</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-chrome-driver</artifactId>
+			<version>3.141.59</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-firefox-driver</artifactId>
+			<version>3.141.59</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

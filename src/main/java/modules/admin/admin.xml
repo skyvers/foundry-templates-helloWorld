@@ -52,6 +52,7 @@
 		<document ref="SelfRegistration" />
 		<document ref="SelfRegistrationActivation" />
 		<document ref="Snapshot" defaultQueryName="qSnapshots" />
+		<document ref="Snapshots" />
 		<document ref="Startup"/>
 		<document ref="Subscription"/>
 		<document ref="SystemDashboard" />
@@ -78,8 +79,8 @@
 				<document name="Subscription" permission="_____"/>
 			</privileges>
 			<accesses>
-				<singular document="SelfRegistration" />
-				<singular document="SelfRegistrationActivation" />
+				<singularAccess document="SelfRegistration" />
+				<singularAccess document="SelfRegistrationActivation" />
 			</accesses>
 		</role>
 		<role name="AppUser">
@@ -111,7 +112,7 @@
 				<document name="UserProxy" permission="_RU_U" />
 			</privileges>
 			<accesses>
-				<singular document="ReportTemplate"/>
+				<singularAccess document="ReportTemplate"/>
 			</accesses>
 		</role>
 		<role name="AuditManager">
@@ -156,6 +157,9 @@
 				</document>
 				<document name="Snapshot" permission="CRUDU">
 					<action name="CopySnapshotToUser" />
+				</document>
+				<document name="Snapshots" permission="_____">
+					<action name="Reorder" />
 				</document>
 				<document name="Subscription" permission="CRUDU"/>
 				<document name="Tag" permission="CRUDU">
@@ -269,6 +273,7 @@
 					<action name="Submit" />
 					<action name="UpdatePreview" />
 				</document>
+				<document name="DownloadFolder" permission="CRUDC" />
 				<document name="Generic" permission="CRUDG"/>
 				<document name="ImportExport" permission="CRUDC">
 					<action name="ClearImport"/>
@@ -320,6 +325,7 @@
 				<document name="Generic" permission="CRUDG"/>
 				<document name="Job" permission="CRUDC">
 					<action name="CancelJob" />
+					<action name="RerunJob" />
 				</document>
 				<document name="Jobs" permission="_____">
 					<action name="DeleteCompletedJobs" />
@@ -402,7 +408,7 @@
 				<document name="UserRole" permission="CRUDC" />
 			</privileges>
 			<accesses>
-				<singular document="Startup" />
+				<singularAccess document="Startup" />
 			</accesses>
 		</role>
 		<role name="ViewUser">
@@ -421,6 +427,9 @@
 				<document name="Generic" permission="CRUDG"/>
 				<document name="Job" permission="_R__U" />
 				<document name="Snapshot" permission="CRUDU" />
+				<document name="Snapshots" permission="_____">
+					<action name="Reorder" />
+				</document>
 				<document name="Subscription" permission="CRUDU"/>
 				<document name="Tag" permission="CRUDU">
 					<action name="Clear" />
@@ -520,10 +529,10 @@
 				<role name="SecurityAdministrator"/>
 			</list>
 		</group>
-		<list document="Snapshot" name="admin.adminMenu.snapshots.list.displayName">
+		<edit document="Snapshots" name="admin.adminMenu.snapshots.document.displayName">
 			<uxui name="desktop" />
 			<role name="BasicUser" />
-		</list>
+		</edit>
 		<list document="Tag" name="admin.adminMenu.tags.list.displayName">
 			<uxui name="desktop" />
 			<role name="BasicUser" />
@@ -711,12 +720,12 @@
 					<filterExpression>?</filterExpression>
 					<projected>false</projected>
 				</column>
-				<column binding="year">
+				<column binding="hitYear">
 					<filterOperator>equal</filterOperator>
 					<filterExpression>?</filterExpression>
 					<projected>false</projected>
 				</column>
-				<column binding="month">
+				<column binding="hitMonth">
 					<filterOperator>equal</filterOperator>
 					<filterExpression>?</filterExpression>
 					<projected>false</projected>
@@ -728,6 +737,9 @@
 			<columns>
 				<column binding="moduleName" sortOrder="ascending" />
 				<column binding="queryName" sortOrder="ascending" />
+				<column binding="ordinal" sortOrder="ascending">
+					<projected>false</projected>
+				</column>
 				<column binding="name" sortOrder="ascending" />
 			</columns>
 		</query>
@@ -747,6 +759,7 @@
 				<column binding="auditModuleName" />
 				<column binding="auditDocumentName" />
 				<column binding="auditBizKey" />
+				<column binding="auditBizId" hidden="true" />
 				<column binding="millis" sortOrder="descending">
 					<projected>false</projected>
 				</column>
@@ -762,7 +775,7 @@
 			</columns>
 		</query>
 		<query name="qCommunicationsForTemplate" documentName="Communication">
-			<description>Communication Templates</description>
+			<description>Communications For Template</description>
 			<columns>
 				<column binding="description" sortOrder="ascending" />
 				<column binding="subject" />
@@ -785,7 +798,7 @@
 			</columns>
 		</query>
 		<query name="qUserSubscriptions" documentName="Subscription">
-			<description>Subscriptions</description>
+			<description>User Subscriptions</description>
 			<columns>
 				<column binding="communication.bizKey" sortOrder="ascending" />
 				<column binding="declined" />
@@ -793,7 +806,7 @@
 			</columns>
 		</query>
 		<query name="qTagCommunications" documentName="Communication">
-			<description>Communications</description>
+			<description>Tag Communications</description>
 			<columns>
 				<column binding="description" sortOrder="ascending" />
 				<column binding="moduleName">

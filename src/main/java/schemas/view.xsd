@@ -39,6 +39,8 @@
 
   <xs:element name="containerColumn" type="tns:dataGridContainerColumn"/>
 
+  <xs:element name="contentAccess" type="tns:viewContentUserAccessMetaData"/>
+
   <xs:element name="contentImage" type="tns:contentImage"/>
 
   <xs:element name="contentLink" type="tns:contentLink"/>
@@ -61,11 +63,13 @@
 
   <xs:element name="dialogButton" type="tns:dialogButton"/>
 
-  <xs:element name="documentAggregate" type="tns:viewDocumentAggregateUserAccessMetaData"/>
+  <xs:element name="documentAggregateAccess" type="tns:viewDocumentAggregateUserAccessMetaData"/>
 
   <xs:element name="download" type="tns:downloadAction"/>
 
   <xs:element name="dynamicImage" type="tns:dynamicImage"/>
+
+  <xs:element name="dynamicImageAccess" type="tns:viewDynamicImageUserAccessMetaData"/>
 
   <xs:element name="editViewReference" type="tns:editViewReference"/>
 
@@ -111,7 +115,7 @@
 
   <xs:element name="map" type="tns:map"/>
 
-  <xs:element name="modelAggregate" type="tns:viewModelAggregateUserAccessMetaData"/>
+  <xs:element name="modelAggregateAccess" type="tns:viewModelAggregateUserAccessMetaData"/>
 
   <xs:element name="new" type="tns:newAction"/>
 
@@ -127,13 +131,13 @@
 
   <xs:element name="password" type="tns:password"/>
 
-  <xs:element name="previousComplete" type="tns:viewPreviousCompleteUserAccessMetaData"/>
+  <xs:element name="previousCompleteAccess" type="tns:viewPreviousCompleteUserAccessMetaData"/>
 
   <xs:element name="print" type="tns:printAction"/>
 
   <xs:element name="progressBar" type="tns:progressBar"/>
 
-  <xs:element name="queryAggregate" type="tns:viewQueryAggregateUserAccessMetaData"/>
+  <xs:element name="queryAggregateAccess" type="tns:viewQueryAggregateUserAccessMetaData"/>
 
   <xs:element name="queryListViewReference" type="tns:queryListViewReference"/>
 
@@ -144,6 +148,8 @@
   <xs:element name="remove" type="tns:removeAction"/>
 
   <xs:element name="report" type="tns:reportAction"/>
+
+  <xs:element name="reportAccess" type="tns:viewReportUserAccessMetaData"/>
 
   <xs:element name="reportReference" type="tns:reportReference"/>
 
@@ -161,7 +167,9 @@
 
   <xs:element name="setInvisible" type="tns:setInvisibleEventAction"/>
 
-  <xs:element name="singular" type="tns:viewSingularUserAccessMetaData"/>
+  <xs:element name="sidebar" type="tns:sidebar"/>
+
+  <xs:element name="singularAccess" type="tns:viewSingularUserAccessMetaData"/>
 
   <xs:element name="slider" type="tns:slider"/>
 
@@ -243,6 +251,7 @@
         <xs:attribute name="minPixelHeight" type="xs:int"/>
         <xs:attribute name="maxPixelHeight" type="xs:int"/>
         <xs:attribute name="editable" type="xs:boolean"/>
+        <xs:attribute name="showMarkup" type="xs:boolean"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -668,6 +677,7 @@
       <xs:extension base="tns:container">
         <xs:sequence>
           <xs:element name="documentation" type="xs:string" form="qualified" minOccurs="0"/>
+          <xs:element ref="tns:sidebar" minOccurs="0"/>
           <xs:element ref="tns:actions" minOccurs="0"/>
           <xs:element name="newParameters" form="qualified" minOccurs="0">
             <xs:complexType>
@@ -724,292 +734,20 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="actions">
-    <xs:sequence>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="tns:add"/>
-        <xs:element ref="tns:export"/>
-        <xs:element ref="tns:import"/>
-        <xs:element ref="tns:cancel"/>
-        <xs:element ref="tns:action"/>
-        <xs:element ref="tns:defaults"/>
-        <xs:element ref="tns:delete"/>
-        <xs:element ref="tns:new"/>
-        <xs:element ref="tns:ok"/>
-        <xs:element ref="tns:remove"/>
-        <xs:element ref="tns:report"/>
-        <xs:element ref="tns:save"/>
-        <xs:element ref="tns:download"/>
-        <xs:element ref="tns:upload"/>
-        <xs:element ref="tns:zoomOut"/>
-        <xs:element ref="tns:print"/>
-      </xs:choice>
-    </xs:sequence>
-    <xs:attribute name="widgetId" type="xs:string"/>
-  </xs:complexType>
-
-  <xs:complexType name="addAction">
+  <xs:complexType name="sidebar">
     <xs:complexContent>
-      <xs:extension base="tns:positionableAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="positionableAction" abstract="true">
-    <xs:complexContent>
-      <xs:extension base="tns:abstractAction">
-        <xs:sequence/>
-        <xs:attribute name="inActionPanel" type="xs:boolean"/>
-        <xs:attribute name="show" type="tns:actionShow"/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="abstractAction" abstract="true">
-    <xs:sequence>
-      <xs:element name="properties" type="ns1:propertyMapType" form="qualified" minOccurs="0"/>
-    </xs:sequence>
-    <xs:attribute name="name" type="xs:string"/>
-    <xs:attribute name="displayName" type="xs:string"/>
-    <xs:attribute name="toolTip" type="xs:string"/>
-    <xs:attribute name="relativeIconFileName" type="xs:string"/>
-    <xs:attribute name="iconStyleClass" type="xs:string"/>
-    <xs:attribute name="confirm" type="xs:string"/>
-    <xs:attribute name="disabled" type="xs:string"/>
-    <xs:attribute name="enabled" type="xs:string"/>
-    <xs:attribute name="invisible" type="xs:string"/>
-    <xs:attribute name="visible" type="xs:string"/>
-  </xs:complexType>
-
-  <xs:complexType name="bizExportAction">
-    <xs:complexContent>
-      <xs:extension base="tns:classAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="classAction" abstract="true">
-    <xs:complexContent>
-      <xs:extension base="tns:validatableAction">
-        <xs:sequence/>
-        <xs:attribute name="className" type="xs:string"/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="validatableAction">
-    <xs:complexContent>
-      <xs:extension base="tns:positionableAction">
-        <xs:sequence/>
-        <xs:attribute name="clientValidation" type="xs:boolean"/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="bizImportAction">
-    <xs:complexContent>
-      <xs:extension base="tns:classAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="cancelAction">
-    <xs:complexContent>
-      <xs:extension base="tns:positionableAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="customAction">
-    <xs:complexContent>
-      <xs:extension base="tns:classAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="defaultsAction" final="extension restriction">
-    <xs:complexContent>
-      <xs:extension base="tns:abstractAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="deleteAction">
-    <xs:complexContent>
-      <xs:extension base="tns:validatableAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="newAction">
-    <xs:complexContent>
-      <xs:extension base="tns:positionableAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="okAction">
-    <xs:complexContent>
-      <xs:extension base="tns:validatableAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="removeAction">
-    <xs:complexContent>
-      <xs:extension base="tns:positionableAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="reportAction">
-    <xs:complexContent>
-      <xs:extension base="tns:parameterizableAction">
-        <xs:sequence/>
-        <xs:attribute name="documentName" type="xs:string" use="required"/>
-        <xs:attribute name="listReport" type="xs:boolean"/>
-        <xs:attribute name="modelName" type="xs:string"/>
-        <xs:attribute name="moduleName" type="xs:string" use="required"/>
-        <xs:attribute name="queryName" type="xs:string"/>
-        <xs:attribute name="reportFormat" type="ns1:reportFormat"/>
-        <xs:attribute name="reportName" type="xs:string" use="required"/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="parameterizableAction" abstract="true">
-    <xs:complexContent>
-      <xs:extension base="tns:positionableAction">
+      <xs:extension base="tns:container">
         <xs:sequence>
-          <xs:element name="parameter" type="tns:parameterImpl" form="qualified" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="properties" type="ns1:propertyMapType" form="qualified" minOccurs="0"/>
         </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="saveAction">
-    <xs:complexContent>
-      <xs:extension base="tns:validatableAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="downloadAction">
-    <xs:complexContent>
-      <xs:extension base="tns:classAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="uploadAction">
-    <xs:complexContent>
-      <xs:extension base="tns:classAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="zoomOutAction">
-    <xs:complexContent>
-      <xs:extension base="tns:validatableAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="printAction">
-    <xs:complexContent>
-      <xs:extension base="tns:validatableAction">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="viewParameter">
-    <xs:sequence/>
-    <xs:attribute name="boundTo" type="xs:string" use="required"/>
-    <xs:attribute name="fromBinding" type="xs:string" use="required"/>
-  </xs:complexType>
-
-  <xs:complexType name="accesses">
-    <xs:sequence>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element ref="tns:singular"/>
-        <xs:element ref="tns:documentAggregate"/>
-        <xs:element ref="tns:queryAggregate"/>
-        <xs:element ref="tns:modelAggregate"/>
-        <xs:element ref="tns:previousComplete"/>
-      </xs:choice>
-    </xs:sequence>
-    <xs:attribute name="generate" type="xs:boolean" use="required"/>
-  </xs:complexType>
-
-  <xs:complexType name="viewSingularUserAccessMetaData">
-    <xs:complexContent>
-      <xs:extension base="tns:viewDocumentAggregateUserAccessMetaData">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="viewDocumentAggregateUserAccessMetaData">
-    <xs:complexContent>
-      <xs:extension base="tns:viewUserAccessMetaData">
-        <xs:sequence/>
-        <xs:attribute name="document" type="xs:string" use="required"/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="viewUserAccessMetaData" abstract="true">
-    <xs:sequence>
-      <xs:element name="uxui" type="tns:viewUserAccessUxUiMetadata" form="qualified" minOccurs="0" maxOccurs="unbounded"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="viewUserAccessUxUiMetadata">
-    <xs:complexContent>
-      <xs:extension base="ns1:namedMetaData">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="viewQueryAggregateUserAccessMetaData">
-    <xs:complexContent>
-      <xs:extension base="tns:viewUserAccessMetaData">
-        <xs:sequence/>
-        <xs:attribute name="query" type="xs:string" use="required"/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="viewModelAggregateUserAccessMetaData">
-    <xs:complexContent>
-      <xs:extension base="tns:viewUserAccessMetaData">
-        <xs:sequence/>
-        <xs:attribute name="model" type="xs:string" use="required"/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="viewPreviousCompleteUserAccessMetaData">
-    <xs:complexContent>
-      <xs:extension base="tns:viewUserAccessMetaData">
-        <xs:sequence/>
-        <xs:attribute name="binding" type="xs:string" use="required"/>
+        <xs:attribute name="widgetId" type="xs:string"/>
+        <xs:attribute name="floatingPixelWidth" type="xs:int"/>
+        <xs:attribute name="floatingPixelWidthBreakpoint" type="xs:int" use="required"/>
+        <xs:attribute name="pixelWidth" type="xs:int"/>
+        <xs:attribute name="percentageWidth" type="xs:int"/>
+        <xs:attribute name="responsiveWidth" type="xs:int"/>
+        <xs:attribute name="invisible" type="xs:string"/>
+        <xs:attribute name="visible" type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -1044,6 +782,7 @@
         </xs:sequence>
         <xs:attribute name="border" type="xs:boolean"/>
         <xs:attribute name="borderTitle" type="xs:string"/>
+        <xs:attribute name="collapsible" type="tns:collapsible"/>
         <xs:attribute name="horizontalAlignment" type="tns:horizontalAlignment"/>
         <xs:attribute name="invisible" type="xs:string"/>
         <xs:attribute name="lg" type="xs:int"/>
@@ -1077,6 +816,7 @@
         </xs:sequence>
         <xs:attribute name="border" type="xs:boolean"/>
         <xs:attribute name="borderTitle" type="xs:string"/>
+        <xs:attribute name="collapsible" type="tns:collapsible"/>
         <xs:attribute name="horizontalAlignment" type="tns:horizontalAlignment"/>
         <xs:attribute name="invisible" type="xs:string"/>
         <xs:attribute name="lg" type="xs:int"/>
@@ -1124,6 +864,7 @@
     <xs:attribute name="maxPixelHeight" type="xs:int"/>
     <xs:attribute name="border" type="xs:boolean"/>
     <xs:attribute name="borderTitle" type="xs:string"/>
+    <xs:attribute name="collapsible" type="tns:collapsible"/>
     <xs:attribute name="defaultLabelAlign" type="tns:horizontalAlignment"/>
     <xs:attribute name="labelLayout" type="ns1:formLabelLayout"/>
     <xs:attribute name="disabled" type="xs:string"/>
@@ -2060,6 +1801,328 @@
     <xs:attribute name="mappedTo" type="xs:string" use="required"/>
   </xs:complexType>
 
+  <xs:complexType name="actions">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="tns:add"/>
+        <xs:element ref="tns:export"/>
+        <xs:element ref="tns:import"/>
+        <xs:element ref="tns:cancel"/>
+        <xs:element ref="tns:action"/>
+        <xs:element ref="tns:defaults"/>
+        <xs:element ref="tns:delete"/>
+        <xs:element ref="tns:new"/>
+        <xs:element ref="tns:ok"/>
+        <xs:element ref="tns:remove"/>
+        <xs:element ref="tns:report"/>
+        <xs:element ref="tns:save"/>
+        <xs:element ref="tns:download"/>
+        <xs:element ref="tns:upload"/>
+        <xs:element ref="tns:zoomOut"/>
+        <xs:element ref="tns:print"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="widgetId" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="addAction">
+    <xs:complexContent>
+      <xs:extension base="tns:positionableAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="positionableAction" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractAction">
+        <xs:sequence/>
+        <xs:attribute name="inActionPanel" type="xs:boolean"/>
+        <xs:attribute name="show" type="tns:actionShow"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="abstractAction" abstract="true">
+    <xs:sequence>
+      <xs:element name="properties" type="ns1:propertyMapType" form="qualified" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="displayName" type="xs:string"/>
+    <xs:attribute name="toolTip" type="xs:string"/>
+    <xs:attribute name="relativeIconFileName" type="xs:string"/>
+    <xs:attribute name="iconStyleClass" type="xs:string"/>
+    <xs:attribute name="confirm" type="xs:string"/>
+    <xs:attribute name="disabled" type="xs:string"/>
+    <xs:attribute name="enabled" type="xs:string"/>
+    <xs:attribute name="invisible" type="xs:string"/>
+    <xs:attribute name="visible" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="bizExportAction">
+    <xs:complexContent>
+      <xs:extension base="tns:classAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="classAction" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="tns:validatableAction">
+        <xs:sequence/>
+        <xs:attribute name="className" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="validatableAction">
+    <xs:complexContent>
+      <xs:extension base="tns:positionableAction">
+        <xs:sequence/>
+        <xs:attribute name="clientValidation" type="xs:boolean"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="bizImportAction">
+    <xs:complexContent>
+      <xs:extension base="tns:classAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="cancelAction">
+    <xs:complexContent>
+      <xs:extension base="tns:positionableAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="customAction">
+    <xs:complexContent>
+      <xs:extension base="tns:classAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="defaultsAction" final="extension restriction">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="deleteAction">
+    <xs:complexContent>
+      <xs:extension base="tns:validatableAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="newAction">
+    <xs:complexContent>
+      <xs:extension base="tns:positionableAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="okAction">
+    <xs:complexContent>
+      <xs:extension base="tns:validatableAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="removeAction">
+    <xs:complexContent>
+      <xs:extension base="tns:positionableAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="reportAction">
+    <xs:complexContent>
+      <xs:extension base="tns:parameterizableAction">
+        <xs:sequence/>
+        <xs:attribute name="documentName" type="xs:string" use="required"/>
+        <xs:attribute name="listReport" type="xs:boolean"/>
+        <xs:attribute name="modelName" type="xs:string"/>
+        <xs:attribute name="moduleName" type="xs:string" use="required"/>
+        <xs:attribute name="queryName" type="xs:string"/>
+        <xs:attribute name="reportFormat" type="ns1:reportFormat"/>
+        <xs:attribute name="reportName" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="parameterizableAction" abstract="true">
+    <xs:complexContent>
+      <xs:extension base="tns:positionableAction">
+        <xs:sequence>
+          <xs:element name="parameter" type="tns:parameterImpl" form="qualified" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="saveAction">
+    <xs:complexContent>
+      <xs:extension base="tns:validatableAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="downloadAction">
+    <xs:complexContent>
+      <xs:extension base="tns:classAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="uploadAction">
+    <xs:complexContent>
+      <xs:extension base="tns:classAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="zoomOutAction">
+    <xs:complexContent>
+      <xs:extension base="tns:validatableAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="printAction">
+    <xs:complexContent>
+      <xs:extension base="tns:validatableAction">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="viewParameter">
+    <xs:sequence/>
+    <xs:attribute name="boundTo" type="xs:string" use="required"/>
+    <xs:attribute name="fromBinding" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="accesses">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="tns:singularAccess"/>
+        <xs:element ref="tns:documentAggregateAccess"/>
+        <xs:element ref="tns:queryAggregateAccess"/>
+        <xs:element ref="tns:modelAggregateAccess"/>
+        <xs:element ref="tns:previousCompleteAccess"/>
+        <xs:element ref="tns:reportAccess"/>
+        <xs:element ref="tns:dynamicImageAccess"/>
+        <xs:element ref="tns:contentAccess"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="generate" type="xs:boolean" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="viewSingularUserAccessMetaData">
+    <xs:complexContent>
+      <xs:extension base="tns:viewDocumentAggregateUserAccessMetaData">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="viewDocumentAggregateUserAccessMetaData">
+    <xs:complexContent>
+      <xs:extension base="tns:viewUserAccessMetaData">
+        <xs:sequence/>
+        <xs:attribute name="document" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="viewUserAccessMetaData" abstract="true">
+    <xs:sequence>
+      <xs:element name="uxui" type="tns:viewUserAccessUxUiMetadata" form="qualified" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="viewUserAccessUxUiMetadata">
+    <xs:complexContent>
+      <xs:extension base="ns1:namedMetaData">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="viewQueryAggregateUserAccessMetaData">
+    <xs:complexContent>
+      <xs:extension base="tns:viewUserAccessMetaData">
+        <xs:sequence/>
+        <xs:attribute name="query" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="viewModelAggregateUserAccessMetaData">
+    <xs:complexContent>
+      <xs:extension base="tns:viewUserAccessMetaData">
+        <xs:sequence/>
+        <xs:attribute name="model" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="viewPreviousCompleteUserAccessMetaData">
+    <xs:complexContent>
+      <xs:extension base="tns:viewUserAccessMetaData">
+        <xs:sequence/>
+        <xs:attribute name="binding" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="viewReportUserAccessMetaData">
+    <xs:complexContent>
+      <xs:extension base="tns:viewUserAccessMetaData">
+        <xs:sequence/>
+        <xs:attribute name="document" type="xs:string" use="required"/>
+        <xs:attribute name="module" type="xs:string" use="required"/>
+        <xs:attribute name="report" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="viewDynamicImageUserAccessMetaData">
+    <xs:complexContent>
+      <xs:extension base="tns:viewUserAccessMetaData">
+        <xs:sequence/>
+        <xs:attribute name="image" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="viewContentUserAccessMetaData">
+    <xs:complexContent>
+      <xs:extension base="tns:viewUserAccessMetaData">
+        <xs:sequence/>
+        <xs:attribute name="binding" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <xs:simpleType name="viewType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="list"/>
@@ -2074,8 +2137,8 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="none"/>
       <xs:enumeration value="relaxed"/>
-      <xs:enumeration value="basic"/>
       <xs:enumeration value="simple"/>
+      <xs:enumeration value="basic"/>
       <xs:enumeration value="text"/>
     </xs:restriction>
   </xs:simpleType>
@@ -2118,11 +2181,10 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="actionShow">
+  <xs:simpleType name="collapsible">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="icon"/>
-      <xs:enumeration value="text"/>
-      <xs:enumeration value="both"/>
+      <xs:enumeration value="open"/>
+      <xs:enumeration value="closed"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -2139,6 +2201,14 @@
       <xs:enumeration value="middle"/>
       <xs:enumeration value="top"/>
       <xs:enumeration value="bottom"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="actionShow">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="icon"/>
+      <xs:enumeration value="text"/>
+      <xs:enumeration value="both"/>
     </xs:restriction>
   </xs:simpleType>
 

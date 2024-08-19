@@ -1,6 +1,7 @@
 package org.skyve.impl.web.spring;
 
 import org.skyve.impl.util.UtilImpl;
+import org.skyve.impl.web.LoginServlet;
 import org.skyve.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,126 +35,139 @@ public class SpringSecurityConfig {
 	
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http
-			.authorizeRequests()
-				// Permit H2 servlet if enabled
-				.antMatchers("/h2/**").permitAll()
-				// Enable access to all rest endpoints as these will have Servlet Filters to secure.
-				.antMatchers("/rest/**").permitAll()
-				// Permit the login servlet resource
-				.antMatchers(HttpMethod.GET, "/login", "/loggedOut").permitAll()
-				// Permit the spring login mechanism and the SC JS login mechanism
-				.antMatchers(HttpMethod.POST, "/loginAttempt", "/smartClientJavascriptLogin").permitAll()
-				// Permit the reset resources
-				.antMatchers("/pages/requestPasswordReset.jsp", "/pages/resetPassword.jsp").permitAll()
-				// Permit home.jsp as it controls access to public and private pages itself
-				.antMatchers("/home.jsp").permitAll()
-				// Permit device.jsp as it forwards to home.jsp
-				.antMatchers("/device.jsp").permitAll()
-				// Permit the health servlet resource
-				.antMatchers("/health").permitAll()
-				// Secure the loggedIn.jsp so that redirect occurs after login
-				.antMatchers("/loggedIn.jsp").authenticated()
-				// Secure the system JSPs and HTMLs
-				.antMatchers("/pages/changePassword.jsp", "/pages/htmlEdit/browseImages.jsp", "/pages/map/geolocate.jsp").authenticated()
-				// Do not secure the home servlet as this ensures the right login page is displayed
-				.antMatchers("/home").permitAll()
-				// Do not secure faces pages as they are secured by a FacesSecurityFilter
-				.antMatchers("/**/*.xhtml").permitAll()
-				// Secure dynamic image URLs
-				.antMatchers("/images/dynamic.*").authenticated()
-				// Secure all report URLs
-				.antMatchers("/report", "/export").authenticated()
-				// Secure chart servlet
-				.antMatchers("/chart").authenticated()
-				// Secure Image Servlet for HTML reporting through Jasper
-				.antMatchers("/image").authenticated()
-				// Secure customer resource servlet
-				.antMatchers("/resource", "/content").authenticated()
-				// Secure meta data servlet
-				.antMatchers("/meta").authenticated()
-				// Secure SC edit view servlet
-				.antMatchers("/smartedit").authenticated()
+		http.authorizeHttpRequests(c -> {
+			if (UtilImpl.DEV_LOGIN_FILTER_USED) {
+				// Open SC list view servlet
+				c.requestMatchers("/smartlist").permitAll()
+					// Open SC snap servlet
+					.requestMatchers("/smartsnap").permitAll()
+					// Open SC tag servlet
+					.requestMatchers("/smarttag").permitAll()
+					// Open export URL
+					.requestMatchers("/export").permitAll();
+			}
+			else {
 				// Secure SC list view servlet
-				.antMatchers("/smartlist").authenticated()
-				// Secure SC view generation servlet
-				.antMatchers("/smartgen").authenticated()
-				// Secure SC snap servlet
-				.antMatchers("/smartsnap").authenticated()
-				// Secure SC tag servlet
-				.antMatchers("/smarttag").authenticated()
-				// Secure SC complete servlet
-				.antMatchers("/smartcomplete").authenticated()
-				// Secure SC text search servlet
-				.antMatchers("/smartsearch").authenticated()
-				// Secure Prime initialisation servlet
-				.antMatchers("/primeinit").authenticated()
-				// Secure map servlet
-				.antMatchers("/map").authenticated()
-				// Secure the Bizport Export Servlet
-				.antMatchers("/bizexport.*").authenticated()
-				// Secure the Download Servlet
-				.antMatchers("/download").authenticated()
-				// Secure the Push endpoint
-				.antMatchers("/omnifaces.push/**").authenticated()
-				// Do not Secure trackmate servlet - it handles authentication itself
-				.antMatchers("/tracks").permitAll()
-				// Permit all GET requests by default
-				.antMatchers(HttpMethod.GET, "/**").permitAll()
-				//  Secure all POST requests by default
-				.antMatchers(HttpMethod.POST, "/**").authenticated()
-				// Only allow get and post methods by default
-				.anyRequest().denyAll()
-				.and()
-			.sessionManagement()
-				.sessionFixation().changeSessionId()
-				.and()
+				c.requestMatchers("/smartlist").authenticated()
+					// Secure SC snap servlet
+					.requestMatchers("/smartsnap").authenticated()
+					// Secure SC tag servlet
+					.requestMatchers("/smarttag").authenticated()
+					// Secure export URL
+					.requestMatchers("/export").authenticated();
+			}
 			
-			.rememberMe()
-				.key("remember")
+			// Permit H2 servlet if enabled
+			c.requestMatchers("/h2/**").permitAll()
+				// Enable access to all rest endpoints as these will have Servlet Filters to secure.
+				.requestMatchers("/rest/**").permitAll()
+				// Permit the login servlet resource
+				.requestMatchers(HttpMethod.GET, LoginServlet.LOGIN_PATH, LoginServlet.LOGGED_OUT_PATH).permitAll()
+				// Permit the spring login mechanism
+				.requestMatchers(HttpMethod.POST, SkyveSpringSecurity.LOGIN_ATTEMPT_PATH).permitAll()
+				// Permit the reset resources
+				.requestMatchers("/pages/requestPasswordReset.jsp", "/pages/resetPassword.jsp").permitAll()
+				// Permit home.jsp as it controls access to public and private pages itself
+				.requestMatchers("/home.jsp").permitAll()
+				// Permit device.jsp as it forwards to home.jsp
+				.requestMatchers("/device.jsp").permitAll()
+				// Permit the health servlet resource
+				.requestMatchers("/health").permitAll()
+				// Secure the loggedIn.jsp so that redirect occurs after login
+				.requestMatchers("/loggedIn.jsp").authenticated()
+				// Secure the changePassword JSP
+				.requestMatchers("/pages/changePassword.jsp").authenticated()
+				// Secure the CKEditor JSPs
+				.requestMatchers("/pages/htmlEdit/browseImages.jsp", "/pages/htmlEdit/browseDocuments.jsp").authenticated()
+				// Do not secure the home servlet as this ensures the right login page is displayed
+				.requestMatchers("/home").permitAll()
+				// Do not secure faces pages as they are secured by a FacesSecurityFilter
+				.requestMatchers("/**/*.xhtml").permitAll()
+				// Secure dynamic image URLs
+				.requestMatchers("/dynamic.*").authenticated()
+				// Secure report URL
+				.requestMatchers("/report").authenticated()
+				// Secure chart servlet
+				.requestMatchers("/chart").authenticated()
+				// Secure Image Servlet for HTML reporting through Jasper
+				.requestMatchers("/image").authenticated()
+				// Do not secure the customer resource servlet as it checks for a user
+				.requestMatchers("/resource", "/content").permitAll()
+				// Do not secure the Download Servlet as it checks for a user
+				.requestMatchers("/download").permitAll()
+				// Secure meta data servlet
+				.requestMatchers("/meta").authenticated()
+				// Secure SC edit view servlet
+				.requestMatchers("/smartedit").authenticated()
+				// Secure SC view generation servlet
+				.requestMatchers("/smartgen").authenticated()
+				// Secure SC complete servlet
+				.requestMatchers("/smartcomplete").authenticated()
+				// Secure SC text search servlet
+				.requestMatchers("/smartsearch").authenticated()
+				// Secure map servlet
+				.requestMatchers("/map").authenticated()
+				// Secure the Bizport Export Servlet
+				.requestMatchers("/bizexport.*").authenticated()
+				// Secure the Push endpoint
+				.requestMatchers("/omnifaces.push/**").authenticated()
+				// Permit all GET requests by default
+				.requestMatchers(HttpMethod.GET, "/**").permitAll()
+				//  Secure all POST requests by default
+				.requestMatchers(HttpMethod.POST, "/**").authenticated()
+				// Only allow get and post methods by default
+				.anyRequest().denyAll();
+			}
+		)
+		.sessionManagement(c -> c.sessionFixation().changeSessionId())
+		.rememberMe(c ->
+			c.key("remember")
 				.tokenValiditySeconds(UtilImpl.REMEMBER_ME_TOKEN_TIMEOUT_HOURS * 60 * 60)
 				.rememberMeParameter("remember")
 				.rememberMeCookieName("remember")
 				.tokenRepository(tokenRepository())
 				.useSecureCookie(Util.isSecureUrl())
-				.and()
-			.formLogin()
-				.defaultSuccessUrl(Util.getHomeUrl())
+		)
+		.formLogin(c -> 
+			c.defaultSuccessUrl(Util.getHomeUrl())
 				.loginPage(Util.getLoginUrl())
-				.loginProcessingUrl("/loginAttempt")
+				.loginProcessingUrl(SkyveSpringSecurity.LOGIN_ATTEMPT_PATH)
 				.failureUrl(Util.getLoginUrl() + "?error")
 				.successHandler(new SkyveAuthenticationSuccessHandler(userDetailsManager()))
-				.and()
-			.logout()
-				.logoutSuccessUrl(Util.getLoggedOutUrl())
+		)
+		.logout(c -> 
+			c.logoutSuccessUrl(Util.getLoggedOutUrl())
 				.deleteCookies("JSESSIONID")
-				.and()
-			.csrf().disable()
-			.httpBasic().disable()
-			.headers()
-				.httpStrictTransportSecurity().disable()
-				.frameOptions().disable()
-				.contentTypeOptions().disable();
-
-		TwoFactorAuthPushEmailFilter tfaEmail = new TwoFactorAuthPushEmailFilter(userDetailsManager());
-		http.addFilterBefore(tfaEmail, UsernamePasswordAuthenticationFilter.class);
+		)
+		.csrf(c -> c.disable())
+		.httpBasic(c -> c.disable())
+		.headers(c -> 
+			c.httpStrictTransportSecurity(ic -> ic.disable())
+				.frameOptions(ic -> ic.disable())
+				.contentTypeOptions(ic -> ic.disable())
+		);
 
 		if ((UtilImpl.AUTHENTICATION_GOOGLE_CLIENT_ID != null)
 				|| (UtilImpl.AUTHENTICATION_FACEBOOK_CLIENT_ID != null)
 				|| (UtilImpl.AUTHENTICATION_GITHUB_CLIENT_ID != null)
 				|| (UtilImpl.AUTHENTICATION_AZUREAD_TENANT_ID != null)) {
-			http.oauth2Login()
-					.defaultSuccessUrl(Util.getHomeUrl())
+			http.oauth2Login(c ->
+				c.defaultSuccessUrl(Util.getHomeUrl())
 					.loginPage(Util.getLoginUrl())
 					.failureUrl(Util.getLoginUrl() + "?error")
-					.successHandler(new SkyveAuthenticationSuccessHandler(userDetailsManager()));
+					.successHandler(new SkyveAuthenticationSuccessHandler(userDetailsManager()))
+			);
 		}
 
-//		http.saml2Login()
-//				.defaultSuccessUrl(Util.getHomeUrl())
+//		http.saml2Login(c -> 
+//			c.defaultSuccessUrl(Util.getHomeUrl())
 //				.loginPage(Util.getLoginUrl())
 //				.failureUrl(Util.getLoginUrl() + "?error")
-//				.successHandler(new SkyveAuthenticationSuccessHandler(userDetailsManager()));
+//				.successHandler(new SkyveAuthenticationSuccessHandler(userDetailsManager()))
+//		);
+
+		TwoFactorAuthPushEmailFilter tfaEmail = new TwoFactorAuthPushEmailFilter(userDetailsManager());
+		http.addFilterBefore(tfaEmail, UsernamePasswordAuthenticationFilter.class);
 
 		DefaultSecurityFilterChain result = http.build();
 		// Note AuthenticationManager is not available as a shared object until after build()
@@ -181,7 +195,7 @@ public class SpringSecurityConfig {
 	}
 	
 	@Bean
-	public PersistentTokenRepository tokenRepository() throws Exception {
+	public PersistentTokenRepository tokenRepository() {
 		return skyve.tokenRepository();
 	}
 	

@@ -10,7 +10,6 @@ import org.skyve.domain.types.DateTime;
 import org.skyve.impl.metadata.repository.ProvidedRepositoryFactory;
 import org.skyve.impl.metadata.user.UserImpl;
 import org.skyve.impl.persistence.hibernate.AbstractHibernatePersistence;
-import org.skyve.impl.util.SQLMetaDataUtil;
 import org.skyve.impl.util.UtilImpl;
 import org.skyve.metadata.customer.Customer;
 import org.skyve.metadata.model.document.Document;
@@ -98,12 +97,14 @@ public class UserExtension extends User {
 		if (isPersisted()) {
 			// Populate the user using the persistence connection since it might have just been inserted and not committed yet
 			result = ProvidedRepositoryFactory.setCustomerAndUserFromPrincipal((UtilImpl.CUSTOMER == null) ? getBizCustomer() + "/" + getUserName() : getUserName());
-			result.clearAllPermissionsAndMenus();
-			
-			// Use the current persistence connection, so do not close
-			@SuppressWarnings("resource")
-			Connection c = ((AbstractHibernatePersistence) CORE.getPersistence()).getConnection();
-			SQLMetaDataUtil.populateUser(result, c);
+			if (result != null) {
+				result.clearAllPermissionsAndMenus();
+				
+				// Use the current persistence connection, so do not close
+				@SuppressWarnings("resource")
+				Connection c = ((AbstractHibernatePersistence) CORE.getPersistence()).getConnection();
+				ProvidedRepositoryFactory.get().populateUser(result, c);
+			}
 		}
 
 		return result;
